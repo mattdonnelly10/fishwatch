@@ -1,0 +1,694 @@
+# persistence:
+#   enabled: true
+#   storageClassName: <your-storage-class> # Optional, depending on your Kubernetes setup
+#   accessModes:
+#     - ReadWriteOnce
+#   size: 10Gi
+#   finalizers:
+#     - kubernetes.io/pvc-protection
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: "default"
+        orgId: 1
+        folder: ""
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/default
+dashboards:
+  default:
+    custom-dashboard:
+      json: |
+          {
+            "annotations": {
+              "list": [
+                {
+                  "builtIn": 1,
+                  "datasource": {
+                    "type": "grafana",
+                    "uid": "-- Grafana --"
+                  },
+                  "enable": true,
+                  "hide": true,
+                  "iconColor": "rgba(0, 211, 255, 1)",
+                  "name": "Annotations & Alerts",
+                  "type": "dashboard"
+                }
+              ]
+            },
+            "editable": true,
+            "fiscalYearStartMonth": 0,
+            "graphTooltip": 0,
+            "id": 2,
+            "links": [],
+            "panels": [
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "bdsiqx927e1vka"
+                },
+                "fieldConfig": {
+                  "defaults": {
+                    "color": {
+                      "mode": "palette-classic"
+                    },
+                    "custom": {
+                      "fillOpacity": 80,
+                      "gradientMode": "none",
+                      "hideFrom": {
+                        "legend": false,
+                        "tooltip": false,
+                        "viz": false
+                      },
+                      "lineWidth": 1,
+                      "stacking": {
+                        "group": "A",
+                        "mode": "none"
+                      }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                      "mode": "percentage",
+                      "steps": [
+                        {
+                          "color": "green",
+                          "value": null
+                        },
+                        {
+                          "color": "orange",
+                          "value": 70
+                        }
+                      ]
+                    }
+                  },
+                  "overrides": []
+                },
+                "gridPos": {
+                  "h": 8,
+                  "w": 12,
+                  "x": 0,
+                  "y": 0
+                },
+                "id": 5,
+                "options": {
+                  "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true
+                  }
+                },
+                "pluginVersion": "11.1.0",
+                "targets": [
+                  {
+                    "datasource": {
+                      "type": "loki",
+                      "uid": "bdsiqx927e1vka"
+                    },
+                    "editorMode": "code",
+                    "expr": "{namespace=\"fishnet\"}",
+                    "legendFormat": "",
+                    "queryType": "range",
+                    "refId": "A"
+                  }
+                ],
+                "title": "KNPS",
+                "transformations": [
+                  {
+                    "id": "extractFields",
+                    "options": {
+                      "format": "auto",
+                      "source": "labels"
+                    }
+                  },
+                  {
+                    "id": "convertFieldType",
+                    "options": {
+                      "conversions": [
+                        {
+                          "destinationType": "number",
+                          "targetField": "knps"
+                        }
+                      ],
+                      "fields": {}
+                    }
+                  },
+                  {
+                    "id": "prepareTimeSeries",
+                    "options": {
+                      "format": "wide"
+                    }
+                  }
+                ],
+                "type": "histogram"
+              },
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "bdsiqx927e1vka"
+                },
+                "fieldConfig": {
+                  "defaults": {
+                    "color": {
+                      "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                      "mode": "percentage",
+                      "steps": [
+                        {
+                          "color": "green",
+                          "value": null
+                        },
+                        {
+                          "color": "orange",
+                          "value": 70
+                        }
+                      ]
+                    }
+                  },
+                  "overrides": []
+                },
+                "gridPos": {
+                  "h": 8,
+                  "w": 12,
+                  "x": 12,
+                  "y": 0
+                },
+                "id": 2,
+                "options": {
+                  "colorMode": "none",
+                  "graphMode": "none",
+                  "justifyMode": "auto",
+                  "orientation": "auto",
+                  "percentChangeColorMode": "standard",
+                  "reduceOptions": {
+                    "calcs": [
+                      "sum"
+                    ],
+                    "fields": "",
+                    "values": false
+                  },
+                  "showPercentChange": false,
+                  "textMode": "auto",
+                  "wideLayout": true
+                },
+                "pluginVersion": "11.1.0",
+                "targets": [
+                  {
+                    "datasource": {
+                      "type": "loki",
+                      "uid": "bdsiqx927e1vka"
+                    },
+                    "editorMode": "code",
+                    "expr": "{namespace=\"fishnet\"}",
+                    "legendFormat": "",
+                    "queryType": "range",
+                    "refId": "A"
+                  }
+                ],
+                "title": "Total Nodes",
+                "transformations": [
+                  {
+                    "id": "extractFields",
+                    "options": {
+                      "format": "auto",
+                      "source": "labels"
+                    }
+                  },
+                  {
+                    "id": "convertFieldType",
+                    "options": {
+                      "conversions": [
+                        {
+                          "destinationType": "number",
+                          "targetField": "total_nodes"
+                        }
+                      ],
+                      "fields": {}
+                    }
+                  },
+                  {
+                    "id": "groupBy",
+                    "options": {
+                      "fields": {
+                        "Time": {
+                          "aggregations": []
+                        },
+                        "container": {
+                          "aggregations": []
+                        },
+                        "pod": {
+                          "aggregations": [],
+                          "operation": "groupby"
+                        },
+                        "positions": {
+                          "aggregations": []
+                        },
+                        "total_nodes": {
+                          "aggregations": [
+                            "max"
+                          ],
+                          "operation": "aggregate"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "id": "prepareTimeSeries",
+                    "options": {
+                      "format": "wide"
+                    }
+                  }
+                ],
+                "type": "stat"
+              },
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "bdsiqx927e1vka"
+                },
+                "fieldConfig": {
+                  "defaults": {
+                    "color": {
+                      "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "green",
+                          "value": null
+                        },
+                        {
+                          "color": "red",
+                          "value": 80
+                        }
+                      ]
+                    },
+                    "unit": "short"
+                  },
+                  "overrides": []
+                },
+                "gridPos": {
+                  "h": 8,
+                  "w": 12,
+                  "x": 0,
+                  "y": 8
+                },
+                "id": 4,
+                "options": {
+                  "colorMode": "none",
+                  "graphMode": "none",
+                  "justifyMode": "auto",
+                  "orientation": "horizontal",
+                  "percentChangeColorMode": "standard",
+                  "reduceOptions": {
+                    "calcs": [
+                      "sum"
+                    ],
+                    "fields": "",
+                    "values": false
+                  },
+                  "showPercentChange": false,
+                  "textMode": "auto",
+                  "wideLayout": true
+                },
+                "pluginVersion": "11.1.0",
+                "targets": [
+                  {
+                    "datasource": {
+                      "type": "loki",
+                      "uid": "bdsiqx927e1vka"
+                    },
+                    "editorMode": "code",
+                    "expr": "{namespace=\"fishnet\"}",
+                    "legendFormat": "",
+                    "queryType": "range",
+                    "refId": "A"
+                  }
+                ],
+                "title": "Positions Analyzed",
+                "transformations": [
+                  {
+                    "id": "extractFields",
+                    "options": {
+                      "format": "auto",
+                      "source": "labels"
+                    }
+                  },
+                  {
+                    "id": "convertFieldType",
+                    "options": {
+                      "conversions": [
+                        {
+                          "destinationType": "number",
+                          "targetField": "positions"
+                        }
+                      ],
+                      "fields": {}
+                    }
+                  },
+                  {
+                    "id": "groupBy",
+                    "options": {
+                      "fields": {
+                        "Time": {
+                          "aggregations": []
+                        },
+                        "container": {
+                          "aggregations": []
+                        },
+                        "pod": {
+                          "aggregations": [],
+                          "operation": "groupby"
+                        },
+                        "positions": {
+                          "aggregations": [
+                            "max"
+                          ],
+                          "operation": "aggregate"
+                        },
+                        "total_nodes": {
+                          "aggregations": [
+                            "max"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "id": "prepareTimeSeries",
+                    "options": {
+                      "format": "wide"
+                    }
+                  }
+                ],
+                "type": "stat"
+              },
+              {
+                "datasource": {
+                  "type": "loki",
+                  "uid": "bdsiqx927e1vka"
+                },
+                "fieldConfig": {
+                  "defaults": {
+                    "color": {
+                      "mode": "thresholds"
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "green",
+                          "value": null
+                        },
+                        {
+                          "color": "red",
+                          "value": 80
+                        }
+                      ]
+                    },
+                    "unit": "short"
+                  },
+                  "overrides": []
+                },
+                "gridPos": {
+                  "h": 8,
+                  "w": 12,
+                  "x": 12,
+                  "y": 8
+                },
+                "id": 3,
+                "options": {
+                  "colorMode": "none",
+                  "graphMode": "none",
+                  "justifyMode": "auto",
+                  "orientation": "horizontal",
+                  "percentChangeColorMode": "standard",
+                  "reduceOptions": {
+                    "calcs": [
+                      "sum"
+                    ],
+                    "fields": "",
+                    "values": false
+                  },
+                  "showPercentChange": false,
+                  "textMode": "auto",
+                  "wideLayout": true
+                },
+                "pluginVersion": "11.1.0",
+                "targets": [
+                  {
+                    "datasource": {
+                      "type": "loki",
+                      "uid": "bdsiqx927e1vka"
+                    },
+                    "editorMode": "code",
+                    "expr": "{namespace=\"fishnet\"}",
+                    "legendFormat": "",
+                    "queryType": "range",
+                    "refId": "A"
+                  }
+                ],
+                "title": "Total Batches",
+                "transformations": [
+                  {
+                    "id": "extractFields",
+                    "options": {
+                      "format": "auto",
+                      "source": "labels"
+                    }
+                  },
+                  {
+                    "id": "convertFieldType",
+                    "options": {
+                      "conversions": [
+                        {
+                          "destinationType": "number",
+                          "targetField": "batches"
+                        }
+                      ],
+                      "fields": {}
+                    }
+                  },
+                  {
+                    "id": "groupBy",
+                    "options": {
+                      "fields": {
+                        "Time": {
+                          "aggregations": []
+                        },
+                        "batches": {
+                          "aggregations": [
+                            "max"
+                          ],
+                          "operation": "aggregate"
+                        },
+                        "container": {
+                          "aggregations": []
+                        },
+                        "pod": {
+                          "aggregations": [],
+                          "operation": "groupby"
+                        },
+                        "positions": {
+                          "aggregations": []
+                        },
+                        "total_nodes": {
+                          "aggregations": [],
+                          "operation": "aggregate"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "id": "prepareTimeSeries",
+                    "options": {
+                      "format": "wide"
+                    }
+                  }
+                ],
+                "type": "stat"
+              },
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "cdu7zevne3da8f"
+                },
+                "fieldConfig": {
+                  "defaults": {
+                    "color": {
+                      "mode": "palette-classic"
+                    },
+                    "custom": {
+                      "axisBorderShow": false,
+                      "axisCenteredZero": false,
+                      "axisColorMode": "text",
+                      "axisLabel": "",
+                      "axisPlacement": "auto",
+                      "barAlignment": 0,
+                      "drawStyle": "line",
+                      "fillOpacity": 0,
+                      "gradientMode": "none",
+                      "hideFrom": {
+                        "legend": false,
+                        "tooltip": false,
+                        "viz": false
+                      },
+                      "insertNulls": false,
+                      "lineInterpolation": "linear",
+                      "lineWidth": 1,
+                      "pointSize": 5,
+                      "scaleDistribution": {
+                        "type": "linear"
+                      },
+                      "showPoints": "auto",
+                      "spanNulls": false,
+                      "stacking": {
+                        "group": "A",
+                        "mode": "none"
+                      },
+                      "thresholdsStyle": {
+                        "mode": "off"
+                      }
+                    },
+                    "mappings": [],
+                    "thresholds": {
+                      "mode": "absolute",
+                      "steps": [
+                        {
+                          "color": "green",
+                          "value": null
+                        },
+                        {
+                          "color": "red",
+                          "value": 80
+                        }
+                      ]
+                    }
+                  },
+                  "overrides": []
+                },
+                "gridPos": {
+                  "h": 8,
+                  "w": 12,
+                  "x": 0,
+                  "y": 16
+                },
+                "id": 6,
+                "options": {
+                  "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "bottom",
+                    "showLegend": true
+                  },
+                  "tooltip": {
+                    "mode": "single",
+                    "sort": "none"
+                  }
+                },
+                "targets": [
+                  {
+                    "datasource": {
+                      "type": "prometheus",
+                      "uid": "cdu7zevne3da8f"
+                    },
+                    "disableTextWrap": false,
+                    "editorMode": "builder",
+                    "expr": "lichess_analysis_system_queued",
+                    "fullMetaSearch": false,
+                    "includeNullMetadata": true,
+                    "legendFormat": "__auto",
+                    "range": true,
+                    "refId": "A",
+                    "useBackend": false
+                  }
+                ],
+                "title": "System Queued",
+                "type": "timeseries"
+              }
+            ],
+            "schemaVersion": 39,
+            "tags": [],
+            "templating": {
+              "list": []
+            },
+            "time": {
+              "from": "now-1d",
+              "to": "now"
+            },
+            "timepicker": {},
+            "timezone": "browser",
+            "title": "Fishwatch",
+            "uid": "bdu4gq2bbaxogb",
+            "version": 19,
+            "weekStart": ""
+          }
+
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - id: 2
+        orgId: 1
+        name: loki
+        uid: bdsiqx927e1vka
+        type: loki
+        typeName: Loki
+        access: proxy
+        url: http://loki-gateway.fishwatch.svc.cluster.local/
+        user: ""
+        database: ""
+        basicAuth: false
+        secureJsonData:
+          httpHeaderValue1: "fishnet"
+        jsonData:
+          isDefault: true
+          httpHeaderName1: X-Scope-OrgID
+          tlsSkipVerify: true
+          derivedFields:
+          - matcherRegex: "(\\d{1,3}(,\\d{3})*) knps/core"
+            matcherType: regex
+            name: knps
+            url: ''
+            urlDisplayLabel: ''
+          - matcherRegex: "(\\d{1,3}(,\\d{3})*) total nodes"
+            matcherType: regex
+            name: total_nodes
+            url: ''
+            urlDisplayLabel: ''
+          - matcherRegex: "(\\d{1,3}(,\\d{3})*) batches"
+            matcherType: regex
+            name: batches
+            url: ''
+            urlDisplayLabel: ''
+          - matcherRegex: "(\\d{1,3}(,\\d{3})*) positions"
+            matcherType: regex
+            name: positions
+            url: ''
+            urlDisplayLabel: ''
+        readOnly: false
+      - id: 2
+        uid: cdu7zevne3da8f
+        orgId: 1
+        name: prometheus
+        type: prometheus
+        typeName: Prometheus
+        typeLogoUrl: public/app/plugins/datasource/prometheus/img/prometheus_logo.svg
+        access: proxy
+        url: http://prometheus-server.fishwatch.svc.cluster.local
+        user: ''
+        database: ''
+        basicAuth: false
+        isDefault: false
+        jsonData:
+          httpMethod: POST
+        readOnly: false
+

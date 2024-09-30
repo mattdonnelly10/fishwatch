@@ -1,0 +1,34 @@
+namespace:
+  name: fishnet
+
+deployment:
+  name: fishnet-deployment
+  replicas: 1
+  app: fishnet
+  containerName: fishnet-pod
+  image: niklasf/fishnet
+  imageTag: "2.0"
+  imagePullPolicy: Always
+  resources:
+    requests:
+      memory: "75Mi"
+  restartPolicy: Always
+
+secret:
+  name: lichess
+  fishnetPrivateKey: <your fishnet key>
+
+configMap:
+  name: fishnet-config
+  cores: "1"
+
+hpa:
+  name: fishnet-hpa
+  minReplicas: 1
+  maxReplicas: 8
+  metric:
+    name: lichess_analysis_system_queued
+    selector:
+      app: fishnet
+    target:
+      value: 1

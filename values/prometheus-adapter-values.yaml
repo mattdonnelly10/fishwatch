@@ -1,0 +1,15 @@
+prometheus:
+  url: http://prometheus-server.fishwatch.svc.cluster.local
+  port: 80
+
+logLevel: 5
+rules:
+  external:
+    - seriesQuery: 'lichess_analysis_system_queued'
+      name:
+        matches: "^(.*)$"
+        as: "lichess_analysis_system_queued"
+      metricsQuery: 'sum(lichess_analysis_system_queued)'
+      resources:
+        namespaced: false
+  default: false

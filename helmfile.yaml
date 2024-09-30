@@ -1,0 +1,70 @@
+helmDefaults:
+  wait: true
+  timeout: 600
+
+repositories:
+  - name: grafana
+    url: https://grafana.github.io/helm-charts
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
+
+releases:
+  - name: prometheus
+    chart: prometheus-community/prometheus
+    namespace: fishwatch
+    version: "25.24.2"
+    values:
+      - values/prometheus-values.yaml
+
+  - name: prometheus-json-exporter
+    chart: prometheus-community/prometheus-json-exporter
+    namespace: fishwatch
+    version: "0.13.0"
+    values:
+      - values/http-json-values.yaml
+    needs:
+      - prometheus
+
+  - name: prometheus-adapter
+    chart: prometheus-community/prometheus-adapter
+    namespace: fishwatch
+    version: "4.10.0"
+    values:
+      - values/prometheus-adapter-values.yaml
+    needs:
+      - prometheus-json-exporter
+
+  - name: promtail
+    chart: grafana/promtail
+    namespace: fishwatch
+    version: "6.16.4"
+    values:
+      - values/promtail-values.yaml
+    needs:
+      - prometheus-adapter
+
+  - name: loki
+    chart: grafana/loki
+    namespace: fishwatch
+    version: "6.7.1"
+    values:
+      - values/loki-values.yaml
+    needs:
+      - fishwatch/promtail
+
+  - name: grafana
+    chart: grafana/grafana
+    namespace: fishwatch
+    version: "8.3.6"
+    values:
+      - values/grafana-values.yaml
+    needs:
+      - fishwatch/loki
+
+  - name: fishnet
+    chart: ./charts/fishnet-chart
+    namespace: fishnet
+    values:
+      - values/fishnet-values.yaml
+    needs:
+      - fishwatch/grafana

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.namespace.name }}-deployment"
+  namespace: {{ .Values.namespace.name }}
+  labels:
+    app: {{ .Values.namespace.name }}
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.namespace.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.namespace.name }}
+    spec:
+      containers:
+        - name: "{{ .Values.namespace.name }}-pod"
+          image: "{{ .Values.deployment.image }}:{{ .Values.deployment.imageTag }}"
+          imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
+          resources:
+            requests:
+              memory: {{ .Values.deployment.resources.requests.memory }}
+          env:
+            - name: CORES
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.name }}
+                  key: cores
+            - name: KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.namespace.name }}
+                  key: fishnet-private-key
+      restartPolicy: {{ .Values.deployment.restartPolicy }}
+

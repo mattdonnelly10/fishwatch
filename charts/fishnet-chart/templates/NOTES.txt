@@ -1,0 +1,18 @@
+# Get Grafana pod name
+GRAFANA_POD=$(kubectl get pods -n fishwatch | grep '^grafana-' | awk '{print $1}')
+
+# Establish port-forwarding to your Grafana instance
+# (You may first need to open a tunnel if running on Minikube)
+kubectl port-forward pod/$GRAFANA_POD 3000:3000 -n fishwatch
+
+# Get your Grafana password
+GRAFANA_SECRET=$(kubectl get secret --namespace fishwatch grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo)
+
+echo "Username: Admin\nPassword: $GRAFANA_SECRET"
+
+# Open your Fishwatch dashboard and login with username Admin and password retrieved in previous step
+
+open http://localhost:3000/d/bdu4gq2bbaxogb/fishwatch?orgId=1
+
+# If you ever want to end the port-forward, just run this command. 
+# ps aux | grep 'kubectl port-forward' | grep -v grep | awk '{print $2}' | xargs kill

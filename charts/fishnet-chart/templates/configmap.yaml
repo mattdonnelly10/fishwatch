@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Values.namespace.name }}-config"
+  namespace: {{ .Values.namespace.name }}
+data:
+  cores: {{ .Values.configMap.cores | quote }}
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cheater-detector-script
+data:
+  cheater_detector.py: |-
+{{ (.Files.Get "scripts/cheater_detector.py") | indent 4 }}

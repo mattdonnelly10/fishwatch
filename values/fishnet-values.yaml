@@ -1,0 +1,22 @@
+deployment:
+  imageTag: "2"
+  imagePullPolicy: Always
+  resources:
+    requests:
+      memory: "75Mi" # Keep about 75Mi per core in the ConfigMap
+  restartPolicy: Always
+
+secret:
+  fishnetPrivateKey: <your base64 encoded key>
+
+configMap:
+  cores: "1"
+
+hpa:
+  minReplicas: 1
+  maxReplicas: 4
+  metric:
+    name: lichess_analysis_system_queued
+    target:
+      value: 1 # Target number for the queue, cannot be zero.
+
