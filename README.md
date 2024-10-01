@@ -1,5 +1,7 @@
 # Fishwatch
 
+![Dashboard](./dashboard.png)
+
 ## Purpose
 
 This project has two goals:
